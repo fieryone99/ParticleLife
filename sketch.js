@@ -1,4 +1,4 @@
-const n = 1000;
+const n = 800;
 const dt = 0.02;
 const frictionHalfLife = 0.040;
 const rMax = 0.075;
