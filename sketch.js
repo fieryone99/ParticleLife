@@ -1,11 +1,16 @@
 const n = 800;
 const dt = 0.02;
-const frictionHalfLife = 0.040;
-const rMax = 0.075;
-const m = 6;
+const frictionHalfLife = 0.050;
+const rMax = 0.06;
+const m = 7;
 const interactionMatrix = randomMatrix();
 const forceFactor = 8;
-const radius = 2;
+const wrapAroundScaler = 2;
+const radius = 3;
+let short;
+let long;
+
+let rotationOfScreen;
 
 const frictionFactor = Math.pow(0.5, dt/frictionHalfLife);
 
@@ -16,15 +21,17 @@ const velocitiesX = [n];
 const velocitiesY = [n];
 
 function setup() { 
-  colorMode(HSB);       
-  createCanvas(windowWidth, windowWidth);
+  colorMode(HSB);  
+  long = max(windowWidth, windowHeight);
+  short = min(windowWidth, windowHeight); 
+  rotationOfScreen = (windowWidth > windowHeight)    
+  createCanvas(long, long);
   for (let i = 0; i < n; i++) {
     colors[i] = floor(random() * m);
     positionsX[i] = random();
-    positionsY[i] = random(0.5);
+    positionsY[i] = random(windowHeight/windowWidth);
     velocitiesX[i] = 0;
     velocitiesY[i] = 0;
-
   }
 }
 
@@ -89,17 +96,36 @@ function updateParticles() {
     positionsX[i] += velocitiesX[i] * dt;
     positionsY[i] += velocitiesY[i] * dt;
 
-
+    if (rotationOfScreen) {
     if (positionsX[i] < 0) {
       positionsX[i] = 1- radius/width;
+      velocitiesX[i] *= wrapAroundScaler;
     } 
     else if (positionsX[i] > 1) {
       positionsX[i] = 0 + radius/width;
-    }
-       else if (positionsY[i] < 0) {
+      velocitiesX[i] *= wrapAroundScaler;
+    } else if (positionsY[i] < 0) {
       positionsY[i] = windowHeight/windowWidth - radius/height;
+      velocitiesY[i] *= wrapAroundScaler;
     } else if (positionsY[i] > windowHeight/windowWidth) {
       positionsY[i] = 0 + radius/height;
+      velocitiesY[i] *= wrapAroundScaler;
+      }
+  } else {
+    if (positionsX[i] < 0) {
+      positionsX[i] = windowWidth/windowHeight- radius/width;
+      velocitiesX[i] *= wrapAroundScaler;
+    } 
+    else if (positionsX[i] > windowWidth/windowHeight) {
+      positionsX[i] = 0 + radius/width;
+      velocitiesX[i] *= wrapAroundScaler;
+    } else if (positionsY[i] < 0) {
+      positionsY[i] = 1 - radius/height;
+      velocitiesY[i] *= wrapAroundScaler;
+    } else if (positionsY[i] > 1) {
+      positionsY[i] = 0 + radius/height;
+      velocitiesY[i] *= wrapAroundScaler;
+      }
     }
   }
 }
