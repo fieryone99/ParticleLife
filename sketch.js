@@ -97,8 +97,8 @@ function updateParticles() {
       positionsX[i] = 0 + radius/width;
     }
        else if (positionsY[i] < 0) {
-      positionsY[i] = 0.5- radius/height;
-    } else if (positionsY[i] > 0.5) {
+      positionsY[i] = windowHeight/windowWidth - radius/height;
+    } else if (positionsY[i] > windowHeight/windowWidth) {
       positionsY[i] = 0 + radius/height;
     }
   }
